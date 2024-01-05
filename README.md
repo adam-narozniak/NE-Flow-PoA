@@ -10,7 +10,7 @@ ax^2 + bx + c
 
 
 ## In Python
-The coeficients are loaded and the `Gaph` in `networkx` is created to such that each edge
+The coefficients are loaded and the `DiGraph` in `networkx` is created to such that each edge
 has additional properties a,b,c. (see `load_matrix_from_csv` function).
 
 # Socially Optimum solution
