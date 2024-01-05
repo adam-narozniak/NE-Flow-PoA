@@ -2,10 +2,9 @@ import itertools
 from io_1 import load_matrix_from_csv
 from network import create_graph_with_latency_modified
 import nash_equilibrium as ne
-import networkx as nx
 
 if __name__ == "__main__":
-    network_num = 2
+    network_num = 1
     path = 'data/network' + str(network_num) + '/'
     # Load the matrices back from the CSV files
     loaded_a_matrix = load_matrix_from_csv(path + 'a_matrix.csv')
@@ -20,4 +19,3 @@ if __name__ == "__main__":
     print(G_modified.edges(data=True))  # Display the edges with latency function attributes
             
     ne.find_nash_equilibrium(G_modified)
-
