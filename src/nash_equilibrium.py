@@ -62,7 +62,7 @@ def find_all_paths(G: nx.DiGraph, source_node, target_node):
         print(edges_combination)
         for idx, edge in enumerate(edges_combination):
             src, dst, abc = edge
-
+    return filtered_permutations4
 def add_edges_weights(abc_weights1, abc_weights2):
     abc_weights1['a'] = abc_weights1['a'] + abc_weights2['a']
     abc_weights1['b'] = abc_weights1['b'] + abc_weights2['b']
