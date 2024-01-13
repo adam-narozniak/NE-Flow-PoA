@@ -18,5 +18,9 @@ if __name__ == "__main__":
                                                     loaded_c_matrix)
 
     print(G_modified.edges(data=True))  # Display the edges with latency function attributes
-
-    ne.find_all_paths(G_modified, 0, 3)
+    A = 0
+    B = 3
+    print(f"All paths from {A} to {B} are presented below:")
+    paths = ne.find_all_paths(G_modified, A, B)
+    for i, path in enumerate(paths):
+        print(f"path {i+1} - {path}")
