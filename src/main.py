@@ -24,3 +24,10 @@ if __name__ == "__main__":
     paths = ne.find_all_paths(G_modified, A, B)
     for i, path in enumerate(paths):
         print(f"path {i+1} - {path}")
+    print()
+    p_s = ne.create_latency_fun(paths)
+    for key in p_s:
+        print(f"Edge {key} is contained in following paths: {p_s[key]}")
+        
+    # ne.find_nash_equilibrium()
+        
