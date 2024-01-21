@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 # Visualize the graph using NetworkX
-def visulaize_network(G):
+def visualize_network(G):
     plt.figure(figsize=(8, 6))
 
     # Node positions in a circular layout for better visualization
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     n = len(loaded_a_matrix)
     G_modified = create_graph_with_latency_modified(n, loaded_a_matrix, loaded_b_matrix,
                                                     loaded_c_matrix)
-    visulaize_network(G_modified)
+    visualize_network(G_modified)

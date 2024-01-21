@@ -50,7 +50,7 @@ def create_latency_fun(paths):
     p_s = {}
     for path_idx, path in enumerate(paths):
         # To start from 1
-        path_idx = path_idx + 1
+        #path_idx = path_idx + 1
         value = []
         for edge in path:
             key = (edge[0], edge[1])
