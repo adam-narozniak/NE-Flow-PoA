@@ -1,9 +1,7 @@
-import timeit
-import itertools
-from io_1 import load_matrix_from_csv
-from network import create_graph_with_latency_modified
 import nash_equilibrium as ne
 import social_optimum as so
+from loading_utils import load_matrix_from_csv
+from network import create_graph_from_matrices
 
 if __name__ == "__main__":
     network_num = 4
@@ -15,7 +13,7 @@ if __name__ == "__main__":
     print(loaded_c_matrix)
 
     n = len(loaded_a_matrix)
-    G_modified = create_graph_with_latency_modified(n, loaded_a_matrix, loaded_b_matrix,
+    G_modified = create_graph_from_matrices(n, loaded_a_matrix, loaded_b_matrix,
                                                     loaded_c_matrix)
 
     print(G_modified.edges(data=True))  # Display the edges with latency function attributes
