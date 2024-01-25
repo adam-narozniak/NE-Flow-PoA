@@ -3,6 +3,7 @@ import itertools
 from io_1 import load_matrix_from_csv
 from network import create_graph_with_latency_modified
 import nash_equilibrium as ne
+import social_optimum as so
 
 if __name__ == "__main__":
     network_num = 4
@@ -28,6 +29,18 @@ if __name__ == "__main__":
     p_s = ne.create_latency_fun(paths)
     for key in p_s:
         print(f"Edge {key} is contained in following paths: {p_s[key]}")
-        
-    # ne.find_nash_equilibrium()
-        
+    print('---------------- Nash Equilibrium 1 (all paths all edges in path)')
+    nash_eq = ne.find_nash_equilibrium(paths, p_s)
+    print(nash_eq)
+    print('---------------- Nash Equilibrium 2 (going through only all edges once)')
+    nash_eq2 = ne.find_nash_equilibrium2(paths, p_s, G_modified.edges(data=True))
+    print(nash_eq2)
+    print('---------------- Nash Equilibrium 3 ')
+    nash_eq3 = ne.find_nash_equilibrium3(paths, p_s, G_modified.edges(data=True))
+    print(nash_eq3)
+
+
+    print('----------------')
+
+    print(so.social_optimum(paths, p_s))
+    

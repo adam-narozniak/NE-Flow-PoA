@@ -1,6 +1,7 @@
 import itertools
 import networkx as nx
 import numpy as np
+from scipy.optimize import minimize
 
 # The main functionality below will be to iterate over all possible edge combinations using itertools
 # Example: edges 0 1 2 will create following combinations from itertols:
@@ -55,53 +56,116 @@ def create_latency_fun(paths):
         for edge in path:
             key = (edge[0], edge[1])
             if key not in p_s:
-                p_s[key] =[path_idx]
+                p_s[key] = [path_idx]
             else:
                 p_s[key].append(path_idx)
     return p_s
 
-def find_nash_equilibrium():
-    # Coefficients matrix
-    A = np.array([
-        [3, 1, 0, 1],
-        [1, 2, 1, 0],
-        [0, 1, 3, 1],
-        [1, 0, 1, 2],
-        [1, 1, 1, 1]
-    ])
+def find_nash_equilibrium(paths, p_s):
+    """
+    Finds the socially optimal flow of in a graph 
+    G_modified - graph with latency functions
+    """
+    n  = len(paths)
+    f = np.array([0] * n)
 
-    # Constants vector
-    b = np.array([0, 0, 0, 0, 1])
+    def Latency(x):
+        """
+        Finds the latency of the graph given the flow
+        x - flow in a graph
+        """
+        L = 0
+        for i_path, path in enumerate(paths):
+            L_path = 0
+            for edge in path:
+                a = edge[2]['a']
+                b = edge[2]['b']
+                c = edge[2]['c']
 
-    # Solve the system of equations
-    solution = np.linalg.lstsq(A, b, rcond=None)[0]
+                p_edge = p_s[(edge[0], edge[1])]
+                x_edge = 0
+                for i in p_edge:
+                    x_edge += x[i]
+                L_path += 1/3 * a * x_edge**3 + 1/2 * b * x_edge**2 + c * x_edge
+            L += L_path
+        return L
+        
+    start_flow = np.array([1/n]*n)
+    bounds = [(0,1)] * n
+    cons = ({'type': 'eq', 'fun': lambda x:  sum(x)-1},
+        {'type': 'ineq', 'fun': lambda x: x})
+    minimum = minimize(Latency, start_flow, bounds=bounds, constraints=cons)
+    return minimum.x, minimum.fun 
     
-    # Extract and print the values of p1, p2, p3, and p4
-    p1, p2, p3, p4 = solution
-    print(f"p1 = {p1}")
-    print(f"p2 = {p2}")
-    print(f"p3 = {p3}")
-    print(f"p4 = {p4}")
+def find_nash_equilibrium2(paths, p_s, edges):
+    """
+    Finds the socially optimal flow of in a graph 
+    G_modified - graph with latency functions
+    """
+    n  = len(paths)
+    f = np.array([0] * n)
+
+    def Latency(x):
+        """
+        Finds the latency of the graph given the flow
+        x - flow in a graph
+        """
+        L = 0
+        for edge in edges:
+            a = edge[2]['a']
+            b = edge[2]['b']
+            c = edge[2]['c']
+            p_edge = p_s[(edge[0], edge[1])]
+            x_edge = 0
+            for i in p_edge:
+                x_edge += x[i]
+            L += 1/3 * a * x_edge**3 + 1/2 * b * x_edge**2 + c * x_edge
+            # L += L_path
+        return L
+    start_flow = np.array([1/n]*n)
+    bounds = [(0,1)] * n
+    cons = ({'type': 'eq', 'fun': lambda x:  sum(x)-1},
+        {'type': 'ineq', 'fun': lambda x: x})
+    minimum = minimize(Latency, start_flow, bounds=bounds, constraints=cons)
+    return minimum.x, minimum.fun 
 
 
+def find_nash_equilibrium3(paths, p_s, edges):
+    """
+    Finds the Nash equilibrium flow in a graph.
+    """
+    n = len(paths)
+    f = np.array([0] * n)
 
+    def Latency(x, path_index):
+        """
+        Finds the latency of a specific path given the flow.
+        """
+        L_path = 0
+        for edge_index in p_s[path_index]:
+            edge = edges[edge_index]
+            a = edge[2]['a']
+            b = edge[2]['b']
+            c = edge[2]['c']
+            x_edge = x[edge_index]
+            L_path += 1/3 * a * x_edge**3 + 1/2 * b * x_edge**2 + c * x_edge
+        return L_path
+
+    def TotalLatency(x):
+        """
+        Finds the total latency of the graph given the flow.
+        """
+        L = 0
+        for path_index in range(n):
+            L += Latency(x, path_index)
+        return L
+
+    start_flow = np.array([1/n] * n)
+    bounds = [(0, 1) for _ in range(n)]
+    cons = ({'type': 'eq', 'fun': lambda x: sum(x) - 1},
+            {'type': 'ineq', 'fun': lambda x: x})
     
-# def add_edges_weights(abc_weights1, abc_weights2):
-#     abc_weights1['a'] = abc_weights1['a'] + abc_weights2['a']
-#     abc_weights1['b'] = abc_weights1['b'] + abc_weights2['b']
-#     abc_weights1['c'] = abc_weights1['c'] + abc_weights2['c']
-#     return abc_weights1
+    nash_equilibrium = minimize(TotalLatency, start_flow, bounds=bounds, constraints=cons)
 
-# def is_bigger_weight(abc_weights1, abc_weights2):
-#     if abc_weights1['a'] > abc_weights2['a']:
-#         return True
-#     elif abc_weights1['a'] < abc_weights2['a']:
-#         return False
-#     else:  # 'a' values are equal, move to 'b'
-#         if abc_weights1['b'] > abc_weights2['b']:
-#             return True
-#         elif abc_weights1['b'] < abc_weights2['b']:
-#             return False
-#         else:  # 'b' values are equal, move to 'c'
-#             return abc_weights1['c'] > abc_weights2['c']
-
+    return nash_equilibrium.x, nash_equilibrium.fun
+    

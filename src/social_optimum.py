@@ -32,11 +32,8 @@ def social_optimum(paths, p_s):
     """
     # paths = ne.find_all_paths(G_modified, 0, len(G_modified.nodes)-1)
     # p_s = ne.create_latency_fun(paths)
-
     n  = len(paths)
-    # f - flow
-    f = np.array([0] * n)
-
+    
     def Latency(x):
         """
         Finds the latency of the graph given the flow
@@ -63,3 +60,4 @@ def social_optimum(paths, p_s):
     cons = ({'type': 'eq', 'fun': lambda x:  sum(x)-1})
     minimum = minimize(Latency, start_flow, bounds=bounds, constraints=cons)
     return minimum.x, minimum.fun 
+    
