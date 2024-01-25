@@ -4,7 +4,7 @@ from loading_utils import load_matrix_from_csv
 from network import create_graph_from_matrices
 
 if __name__ == "__main__":
-    network_num = 4
+    network_num = 2
     path = 'data/network' + str(network_num) + '/'
     # Load the matrices back from the CSV files
     loaded_a_matrix = load_matrix_from_csv(path + 'a_matrix.csv')
@@ -13,12 +13,12 @@ if __name__ == "__main__":
     print(loaded_c_matrix)
 
     n = len(loaded_a_matrix)
-    G_modified = create_graph_from_matrices(n, loaded_a_matrix, loaded_b_matrix,
+    G_modified = create_graph_from_matrices(loaded_a_matrix, loaded_b_matrix,
                                                     loaded_c_matrix)
 
     print(G_modified.edges(data=True))  # Display the edges with latency function attributes
     A = 0
-    B = 3
+    B = 2
     print(f"All paths from {A} to {B} are presented below:")
     paths = ne.find_all_paths(G_modified, A, B)
     for i, path in enumerate(paths):
@@ -33,10 +33,6 @@ if __name__ == "__main__":
     print('---------------- Nash Equilibrium 2 (going through only all edges once)')
     nash_eq2 = ne.find_nash_equilibrium2(paths, p_s, G_modified.edges(data=True))
     print(nash_eq2)
-    print('---------------- Nash Equilibrium 3 ')
-    nash_eq3 = ne.find_nash_equilibrium3(paths, p_s, G_modified.edges(data=True))
-    print(nash_eq3)
-
 
     print('----------------')
 
