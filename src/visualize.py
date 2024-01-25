@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 
+
 # Visualize the graph using NetworkX
 def visualize_network(G):
     plt.figure(figsize=(8, 6))
@@ -22,14 +23,15 @@ def visualize_network(G):
 
 
 if __name__ == "__main__":
-    from io_1 import load_matrix_from_csv
-    from src.network import create_graph_with_latency_modified
+    from loading_utils import load_matrix_from_csv
+    from src.network import create_graph_from_matrices
+
     loaded_a_matrix = load_matrix_from_csv('../data/network1/a_matrix.csv')
     loaded_b_matrix = load_matrix_from_csv('../data/network1/b_matrix.csv')
     loaded_c_matrix = load_matrix_from_csv('../data/network1/c_matrix.csv')
     print(loaded_c_matrix)
 
     n = len(loaded_a_matrix)
-    G_modified = create_graph_with_latency_modified(n, loaded_a_matrix, loaded_b_matrix,
-                                                    loaded_c_matrix)
+    G_modified = create_graph_from_matrices(loaded_a_matrix, loaded_b_matrix,
+                                            loaded_c_matrix)
     visualize_network(G_modified)
