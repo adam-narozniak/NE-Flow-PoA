@@ -66,9 +66,10 @@ def calculate_nash_flow(G, start_node=None, stop_node=None, max_iter=100000, del
             update_edge_flow(G, paths, partition)
 
         if compare_latencies(latencies, partition) < STOPPING_CONDITION:
-            print("Stopping condition reached after ", iteration, " iterations!")
-            print("Final latencies: ", latencies)
-            print("Final partition: ", partition)
+            if verbose:
+                print("Stopping condition reached after ", iteration, " iterations!")
+                print("Final latencies: ", latencies)
+                print("Final partition: ", partition)
             return G, partition, paths, latencies
 
         delta = delta * lr
@@ -83,8 +84,9 @@ def calculate_nash_flow(G, start_node=None, stop_node=None, max_iter=100000, del
             print("Delta: ", delta)
 
     final_latencies = calculate_all_latencies(G, paths)
-    print("Max iterations reached!")
-    print("Final latencies: ", final_latencies)
-    print("Final partition: ", partition)
+    if verbose:
+        print("Max iterations reached!")
+        print("Final latencies: ", final_latencies)
+        print("Final partition: ", partition)
 
     return G, partition, paths, final_latencies

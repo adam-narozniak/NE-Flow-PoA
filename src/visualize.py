@@ -3,7 +3,7 @@ import networkx as nx
 
 
 # Visualize the graph using NetworkX
-def visualize_network(G):
+def visualize_network(G, savepath=None):
     plt.figure(figsize=(8, 6))
 
     # Node positions in a circular layout for better visualization
@@ -19,7 +19,8 @@ def visualize_network(G):
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
 
     plt.title("Graph with Quadratic Latency Functions", fontsize=20)
-    plt.savefig("./../images/test_network1.jpg")
+    if savepath is not None:
+        plt.savefig(savepath)
 
 
 if __name__ == "__main__":

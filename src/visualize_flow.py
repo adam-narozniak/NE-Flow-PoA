@@ -17,7 +17,7 @@ def edge_weights_func(G, p_s, flow):
         edge_weights.append(weight)
     return edge_weights
 
-def visualize_flow(G, p_s, flow):
+def visualize_flow(G, p_s, flow, savepath=None):
     plt.figure(figsize=(8, 6))
     pos = nx.circular_layout(G)
 
@@ -30,6 +30,8 @@ def visualize_flow(G, p_s, flow):
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, font_color='red')
     
     plt.title("Graph with the flow visualized", fontsize=20)
+    if savepath is not None:
+        plt.savefig(savepath)
 
 
     
