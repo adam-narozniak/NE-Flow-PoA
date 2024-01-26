@@ -142,3 +142,8 @@ def find_nash_equilibrium2(paths, p_s, edges):
     minimum = minimize(Latency, start_flow, bounds=bounds, constraints=cons)
     return minimum.x, minimum.fun 
 
+def find_nash_equilibrium_from_graph(G: nx.DiGraph) -> tuple[np.ndarray, float]:
+    paths = find_all_paths(G)
+    edge_to_path_id = create_latency_fun(paths)
+    flow_fractions, total_latency = find_nash_equilibrium(paths, edge_to_path_id)
+    return flow_fractions, total_latency
