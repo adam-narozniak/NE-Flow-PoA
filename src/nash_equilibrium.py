@@ -47,9 +47,12 @@ def find_all_paths(G: nx.DiGraph, source_node=None, target_node=None):
     # And make sure this doesnt happen: 0-1 -> 1-2 -> 2-1. No coming back!
     filtered_permutations3 = [
         combination for combination in filtered_permutations2
-        if all(combination[i][1] == combination[i + 1][0] for i in
+        # combination[i] is our current edge e
+        # e[0] is the first node
+        # e[1] is the second node
+        if all(combination[i][1] == combination[i + 1][0] for i in # current destination = future source
                range(len(combination) - 1))
-           and all(combination[i][0] != combination[i + 1][1] for i in
+           and all(combination[i][0] != combination[i + 1][1] for i in # current source != future dest, no comimg back
                    range(len(combination) - 1))
     ]
 
@@ -61,7 +64,7 @@ def find_all_paths(G: nx.DiGraph, source_node=None, target_node=None):
 
     return filtered_permutations4
 
-
+# Returns flow on each edge from all paths (P_i)
 def create_latency_fun(paths):
     p_s = {}
     for path_idx, path in enumerate(paths):
@@ -82,13 +85,8 @@ def find_nash_equilibrium(paths, p_s):
     G_modified - graph with latency functions
     """
     n  = len(paths)
-    f = np.array([0] * n)
 
     def Latency(x):
-        """
-        Finds the latency of the graph given the flow
-        x - flow in a graph
-        """
         L = 0
         for i_path, path in enumerate(paths):
             L_path = 0
@@ -96,6 +94,7 @@ def find_nash_equilibrium(paths, p_s):
                 a = edge[2]['a']
                 b = edge[2]['b']
                 c = edge[2]['c']
+                # flow on current edge
                 p_edge = p_s[(edge[0], edge[1])]
                 x_edge = 0
                 for i in p_edge:
